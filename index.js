@@ -16,6 +16,9 @@ document.addEventListener('click', function(e) {
 
     } else if(e.target.dataset.retweet) {
         handleRetweetClick(e.target.dataset.retweet);
+
+    } else if(e.target.dataset.reply) {
+        handleReplyClick(e.target.dataset.reply);
     }
     
     // Note: I used else if() instead of if(), because I don't want 
@@ -60,6 +63,12 @@ function handleRetweetClick(tweetId) {
     render();
 }
 
+// When the reply get clicked
+function handleReplyClick(replyId) {
+    // Getting the div that holds the replies
+    document.getElementById('replies-' + replyId).classList.toggle('hidden')
+}
+
 
 function getFeedHtml() {
     let feedHtml = '';
@@ -68,6 +77,25 @@ function getFeedHtml() {
         // For styling the like and retweeted when they are clicked
         let likeIconClass = tweet.isLiked && 'liked';
         let retweetIconClass = tweet.isRetweeted && 'retweeted';
+
+        // Checking if there's any replies on this tweet if so:
+        let repliesHtml = '';
+        if(tweet.replies.length) {
+            tweet.replies.forEach(function(reply) {
+                repliesHtml += `
+                    <div class="tweet-reply">
+                        <div class="tweet-inner">
+                        <img src="${reply.profilePic}" class="profile-pic" />
+                            <div>
+                                <p class="handle">${reply.handle}</p>
+                                <p class="tweet-text">${reply.tweetText}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
 
         feedHtml += `
             <div class="tweet">
@@ -89,9 +117,13 @@ function getFeedHtml() {
                                 <i data-retweet="${tweet.uuid}" class="fa-solid fa-retweet ${retweetIconClass}"></i>
                                 ${tweet.retweets}
                             </span>
-                        </div>   
-                    </div>            
+                        </div>
+                    </div>
                 </div>
+            </div>
+
+            <div class="hidden" id="replies-${tweet.uuid}">
+                ${repliesHtml}
             </div>
         `;
     });
