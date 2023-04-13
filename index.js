@@ -1,16 +1,9 @@
+import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
 import { tweetsData } from './data/data.js';
 
 
-const tweetInput = document.getElementById('tweet-input');
-const tweetBtn = document.getElementById('tweet-btn');
-
-// Listen for the tweet button when it's clicked
-tweetBtn.addEventListener('click', function() {
-    console.log(tweetInput.value);
-});
-
+// Listen for the "like" "retweet" "reply" click, and for adding tweet
 document.addEventListener('click', function(e) {
-    // Listen for the like click
     if(e.target.dataset.like) {
         handleLikeClick(e.target.dataset.like);
 
@@ -19,6 +12,9 @@ document.addEventListener('click', function(e) {
 
     } else if(e.target.dataset.reply) {
         handleReplyClick(e.target.dataset.reply);
+
+    } else if(e.target.id === 'tweet-btn') {
+        handleTweetBtnClick();
     }
     
     // Note: I used else if() instead of if(), because I don't want 
@@ -67,6 +63,28 @@ function handleRetweetClick(tweetId) {
 function handleReplyClick(replyId) {
     // Getting the div that holds the replies
     document.getElementById('replies-' + replyId).classList.toggle('hidden')
+}
+
+// When the tweet button get clicked
+function handleTweetBtnClick() {
+    const tweetInput = document.getElementById('tweet-input');
+
+    if(tweetInput.value) {
+        const newTweet = {
+            handle: '@Scrimba',
+            profilePic: 'images/scrimbalogo.png',
+            likes: 0,
+            retweets: 0,
+            tweetText: tweetInput.value,
+            replies: [],
+            isLikes: false,
+            isRetweeted: false,
+            uuid: uuidv4()
+        }
+    
+        tweetsData.unshift(newTweet);
+        render();
+    }
 }
 
 
