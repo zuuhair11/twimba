@@ -15,6 +15,10 @@ document.addEventListener('click', function(e) {
 
     } else if(e.target.id === 'tweet-btn') {
         handleTweetBtnClick();
+
+    } else if(e.target.dataset.tweetreply) {
+        handleTweetReply(e.target.dataset.tweetreply);
+
     }
     
     // Note: I used else if() instead of if(), because I don't want 
@@ -88,6 +92,32 @@ function handleTweetBtnClick() {
 }
 
 
+// When you replied on a tweet
+function handleTweetReply(tweetId) {
+    // Getting the replied value
+    const repliedValue = document.getElementById('tweet-reply-' + tweetId).value;
+
+    if(repliedValue.trim().length) {
+        // First getting the tweet
+        const tweet = tweetsData.find(function(tweet) {
+            return tweet.uuid === tweetId;
+        });
+
+        // Pushing the replied to the tweet's array replied
+        tweet.replies.unshift({
+            handle: '@Scrimba',
+            profilePic: 'images/scrimbalogo.png',
+            tweetText: repliedValue
+        });
+
+        // Displaying the results
+        render();
+
+        // Keep this tweet that I just replied to displayed
+        document.getElementById('replies-' + tweetId).classList.toggle('hidden');
+    }
+}
+
 function getFeedHtml() {
     let feedHtml = '';
 
@@ -142,6 +172,11 @@ function getFeedHtml() {
 
             <div class="hidden" id="replies-${tweet.uuid}">
                 ${repliesHtml}
+
+                <div class="tweet-reply">
+                    <input id="tweet-reply-${tweet.uuid}" type="text" />
+                    <button data-tweetreply="${tweet.uuid}" class="btn-reply" type="button">Reply</button>
+                </div>
             </div>
         `;
     });

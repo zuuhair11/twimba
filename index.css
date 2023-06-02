@@ -132,3 +132,17 @@ button{
 .hidden{
     display: none;
 }
+
+
+/* Reply on a tweet feature */
+.btn-reply {
+    all: unset;
+
+    background-color: #0F8CDF;
+    color: white;
+    padding: 3px;
+    border-radius: 3px;
+    font-size: 13px;
+    cursor: pointer;;
+
+}
